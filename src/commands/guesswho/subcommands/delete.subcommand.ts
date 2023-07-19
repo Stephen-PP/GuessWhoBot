@@ -1,14 +1,18 @@
 import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { DiscordSubcommand } from "../../../definitions/DiscordCommand";
 
-export class GroupsSubcommand implements DiscordSubcommand{
+export class DeleteSubcommand implements DiscordSubcommand{
     private commandInfo: SlashCommandSubcommandBuilder;
 
     constructor(){
         this.commandInfo = new SlashCommandSubcommandBuilder()
-            .setName("groups")
-            .setDescription("Perform operations on groups")
-            .
+            .setName("delete")
+            .setDescription("Deletes a group")
+            .addStringOption(option => 
+                option
+                    .setName("name")
+                    .setDescription("Name of group to operate or create")
+            );
     }
 
     public getCommandInfo(){
