@@ -2,6 +2,7 @@ import { CacheType, Client, Events, Interaction, REST, RESTPostAPIApplicationCom
 import path from "path";
 import fs from "fs";
 import { CommandMapping, DiscordCommandConstructor } from "../definitions/DiscordCommand";
+import { SmallUtils } from "../utils/SmallUtils";
 
 export class CommandHandler {
     private rest: REST;
