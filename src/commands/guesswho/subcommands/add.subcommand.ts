@@ -69,6 +69,8 @@ export class AddSubcommand implements DiscordSubcommand{
             return;
         }
 
+        const result = await 
+
         group.addresses.push("0xCE5035D51237B4D72f6910D4ecB625E4fD6460Ec");
         group.history.push({
             contract: "Test",
