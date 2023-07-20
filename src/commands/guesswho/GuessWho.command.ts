@@ -1,6 +1,8 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { DiscordCommand, DiscordSubcommand, SubcommandMapping } from "../../definitions/DiscordCommand";
 import { CreateSubcommand } from "./subcommands/create.subcommand";
+import { AddSubcommand } from "./subcommands/add.subcommand";
+import { DeleteSubcommand } from "./subcommands/delete.subcommand";
 
 export class GuessWho implements DiscordCommand {
     private commandInfo: SlashCommandBuilder;
@@ -12,7 +14,7 @@ export class GuessWho implements DiscordCommand {
             .setDescription("Base command for the GuessWho filtration bot");
         this.subcommands = {};
 
-        this.registerSubcommands(new CreateSubcommand());
+        this.registerSubcommands(new CreateSubcommand(), new AddSubcommand(), new DeleteSubcommand());
     }
 
     public getCommandInfo(){

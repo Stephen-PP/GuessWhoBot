@@ -11,14 +11,28 @@ export class AddSubcommand implements DiscordSubcommand{
             .addStringOption(option => 
                 option
                     .setName("name")
-                    .setDescription("Name of group to operate or create")
+                    .setDescription("Name of group to add addresses to")
             )
             .addStringOption(option => 
                 option
-                    .setName("address")
-                    .setDescription("Name of group to operate or create")
+                    .setName("token")
+                    .setDescription("ERC-20 Token Contract to filter against")
             )
-            
+            .addIntegerOption(option => 
+                option
+                    .setName("time")
+                    .setDescription("Time (in minutes) from first liquidity addition to consider in filter")
+            )
+            .addIntegerOption(option => 
+                option
+                    .setName("minimum")
+                    .setDescription("Minimum amount of ETH to consider in filter")
+            )
+            .addIntegerOption(option => 
+                option
+                    .setName("maximum")
+                    .setDescription("Maximum amount of ETH to consider in filter")
+            )
     }
 
     public getCommandInfo(){

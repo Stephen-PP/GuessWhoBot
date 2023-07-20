@@ -1,5 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { DiscordSubcommand } from "../../../definitions/DiscordCommand";
+import { StorageModel } from "../../../models/StorageModel";
+import { EmbedUtils } from "../../../utils/EmbedUtils";
 
 export class DeleteSubcommand implements DiscordSubcommand{
     private commandInfo: SlashCommandSubcommandBuilder;
@@ -11,7 +13,7 @@ export class DeleteSubcommand implements DiscordSubcommand{
             .addStringOption(option => 
                 option
                     .setName("name")
-                    .setDescription("Name of group to operate or create")
+                    .setDescription("Name of group to delete")
             );
     }
 
@@ -20,6 +22,26 @@ export class DeleteSubcommand implements DiscordSubcommand{
     }
 
     public async handleCommand(interaction: ChatInputCommandInteraction) {
+        const groupName = interaction.options.getString("name") as string;
 
+        const deleted = await StorageModel.deleteGroup(groupName);
+
+        if(deleted){
+            interaction.reply({
+                embeds: [
+                    EmbedUtils.buildSuccessEmbed()
+                        .setTitle("Group Deleted")
+                        .setDescription("Successfully deleted group: " + groupName)
+                ]
+            })
+        }else{
+            interaction.reply({
+                embeds: [
+                    EmbedUtils.buildErrorEmbed()
+                        .setTitle("Group Deletion Failed")
+                        .setDescription(`Could not delete group: ${groupName}. Are you sure it exists?`)
+                ]
+            })
+        }
     }
 }
