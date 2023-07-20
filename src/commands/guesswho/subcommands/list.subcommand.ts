@@ -3,7 +3,7 @@ import { DiscordSubcommand } from "../../../definitions/DiscordCommand";
 import { StorageModel } from "../../../models/StorageModel";
 import { EmbedUtils } from "../../../utils/EmbedUtils";
 
-export class AddSubcommand implements DiscordSubcommand{
+export class ListSubcommand implements DiscordSubcommand{
     private commandInfo: SlashCommandSubcommandBuilder;
 
     constructor(){
@@ -19,6 +19,7 @@ export class AddSubcommand implements DiscordSubcommand{
     public async handleCommand(interaction: ChatInputCommandInteraction) {
         const groups = await StorageModel.getGroups();
 
+        // If no groups exist, show that
         if(groups.length === 0){
             await interaction.reply({
                 embeds: [
@@ -30,12 +31,20 @@ export class AddSubcommand implements DiscordSubcommand{
             return;
         }
 
+        // Build the description
         let description = "Groups:\n";
 
         for(let group of groups){
             description += `[${group.name}]: ${group.addresses.length} Addresses - ${group.history.length} Steps`
         }
 
-        embedLength.s
+        // Send the list of groups
+        await interaction.reply({
+            embeds: [
+                EmbedUtils.buildSuccessEmbed()
+                    .setTitle("Current Groups")
+                    .setDescription(description)
+            ]
+        });
     }
 }

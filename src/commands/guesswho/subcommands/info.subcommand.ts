@@ -15,6 +15,7 @@ export class InfoSubcommand implements DiscordSubcommand{
                 option
                     .setName("name")
                     .setDescription("Name of group to grab information of")
+                    .setRequired(true)
             )
             .addIntegerOption(option => 
                 option
@@ -67,7 +68,7 @@ export class InfoSubcommand implements DiscordSubcommand{
         // Handle the different embeds for it step is enabled or disabled
         if(step != null){
             // Make sure the step actually exists in the history
-            if(group.history.length >= step){
+            if(group.history.length <= step){
                 await interaction.reply({
                     embeds: [
                         EmbedUtils.buildErrorEmbed()
@@ -99,11 +100,11 @@ export class InfoSubcommand implements DiscordSubcommand{
             // Add the remaining fields to the embed
             embed.addFields(firstField, {
                 name: "Addresses Before",
-                value: history.addressesBefore.join("\n"),
+                value: this.joinAddresses(history.addressesBefore),
                 inline: true
             }, {
                 name: "Addresses After",
-                value: history.addressesAfter.join("\n"),
+                value: this.joinAddresses(history.addressesAfter),
                 inline: true
             })
         }else{
@@ -111,14 +112,14 @@ export class InfoSubcommand implements DiscordSubcommand{
             let description = `Retrieved the following information about group ${name}:
             
             Format:
-            [History Step]) [ERC-20 Address]: [Addresses Before] -> [Addresses After]
+            [History Step]) [ERC-20 Address] - [Action Type]: [Addresses Before] -> [Addresses After]
             `;
 
             // Add the extra information to the description
             for(let i = 0; i < group.history.length; i++){
                 const history = group.history[i];
 
-                description += `**${i}**) ${SmallUtils.truncateAddress(history.contract)}: **${history.addressesBefore.length}** -> **${history.addressesAfter.length}**\n`
+                description += `**${i}**) ${SmallUtils.truncateAddress(history.contract)} - ${history.action === "revert" ? "Reversion" : "Addition"}: **${history.addressesBefore.length}** -> **${history.addressesAfter.length}**\n`
             }
 
             embed.setDescription(description);
@@ -126,13 +127,21 @@ export class InfoSubcommand implements DiscordSubcommand{
             // Now build the field
             embed.addFields({
                 name: "Current Addresses",
-                value: group.addresses.join("\n")
-            })
+                value: this.joinAddresses(group.addresses),
+                inline: true
+            });
         }
 
         // Send the embed
         await interaction.reply({
             embeds: [embed]
         });
+    }
+
+    private joinAddresses(addresses: string[]): string{
+        if(addresses.length === 0){
+            return "No addresses currently exist in the group"
+        }
+        return addresses.join("\n")
     }
 }

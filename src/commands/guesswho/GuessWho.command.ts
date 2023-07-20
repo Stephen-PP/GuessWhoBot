@@ -3,6 +3,9 @@ import { DiscordCommand, DiscordSubcommand, SubcommandMapping } from "../../defi
 import { CreateSubcommand } from "./subcommands/create.subcommand";
 import { AddSubcommand } from "./subcommands/add.subcommand";
 import { DeleteSubcommand } from "./subcommands/delete.subcommand";
+import { InfoSubcommand } from "./subcommands/info.subcommand";
+import { ListSubcommand } from "./subcommands/list.subcommand";
+import { RevertSubcommand } from "./subcommands/revert.subcommand";
 
 export class GuessWho implements DiscordCommand {
     private commandInfo: SlashCommandBuilder;
@@ -14,7 +17,9 @@ export class GuessWho implements DiscordCommand {
             .setDescription("Base command for the GuessWho filtration bot");
         this.subcommands = {};
 
-        this.registerSubcommands(new CreateSubcommand(), new AddSubcommand(), new DeleteSubcommand());
+        this.registerSubcommands(
+            new CreateSubcommand(), new AddSubcommand(), new DeleteSubcommand(), new InfoSubcommand(), new ListSubcommand(), new RevertSubcommand()
+        );
     }
 
     public getCommandInfo(){

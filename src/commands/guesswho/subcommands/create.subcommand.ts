@@ -15,6 +15,7 @@ export class CreateSubcommand implements DiscordSubcommand{
                 option
                     .setName("name")
                     .setDescription("Name of group to create")
+                    .setRequired(true)
             );
     }
 

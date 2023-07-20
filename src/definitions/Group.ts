@@ -4,7 +4,7 @@ export interface IGroup {
     history: IGroupHistory[]
 }
 
-interface IGroupHistory {
+export interface IGroupHistory {
     contract: string,
     action: "revert" | "add"
     addressesBefore: string[],

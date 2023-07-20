@@ -14,6 +14,7 @@ export class DeleteSubcommand implements DiscordSubcommand{
                 option
                     .setName("name")
                     .setDescription("Name of group to delete")
+                    .setRequired(true)
             );
     }
 

@@ -11,10 +11,16 @@ export class StorageModel {
     }
 
     static async upsertGroup(group: IGroup): Promise<void> {
+        // Verify we are connected to the redis instance
+        await this.verifyClient();
+
         await this.client.hSet("groups", group.name, JSON.stringify(group));
     }
 
     static async getGroups(): Promise<IGroup[]> {
+        // Verify we are connected to the redis instance
+        await this.verifyClient();
+        
         const groups: IGroup[] = [];
         
         // Get all info from the redis
@@ -32,6 +38,9 @@ export class StorageModel {
     }
 
     static async getGroup(name: string): Promise<IGroup | false> {
+        // Verify we are connected to the redis instance
+        await this.verifyClient();
+        
         // Load group
         const group = await this.client.hGet("groups", name);
 
@@ -49,6 +58,9 @@ export class StorageModel {
     }
 
     static async deleteGroup(name: string): Promise<boolean> {
+        // Verify we are connected to the redis instance
+        await this.verifyClient();
+        
         const group = await this.getGroup(name);
 
         // Return false if group does not exist
@@ -59,6 +71,12 @@ export class StorageModel {
         // Delete group and return true
         await this.client.hDel("groups", name);
         return true;
+    }
+
+    private static async verifyClient(){
+        if(!this.client.isOpen){
+            await this.client.connect();
+        }
     }
 }
 
