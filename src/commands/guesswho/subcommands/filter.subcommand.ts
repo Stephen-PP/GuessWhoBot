@@ -105,7 +105,7 @@ export class FilterSubcommand implements DiscordSubcommand{
         const blocksToSearch = Math.ceil((time*60)/12);
 
         // Let the user know we are finding transfers
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 EmbedUtils.buildInfoEmbed()
                     .setTitle("Gathering Information (2/3)")
@@ -115,9 +115,10 @@ export class FilterSubcommand implements DiscordSubcommand{
 
         // Now, we need to get all sales in the period
         const transfers = await AppearanceService.getAllTransfers(startingBlock.pair, token, startingBlock.block, startingBlock.block + blocksToSearch);
+        console.log("transfered hanled");
 
         // Let the user know we are finding transfers
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 EmbedUtils.buildInfoEmbed()
                     .setTitle("Gathering Information (3/3)")
@@ -134,6 +135,7 @@ export class FilterSubcommand implements DiscordSubcommand{
         for(let transfer of transfers) {
             // Skip sales (for now)
             if(transfer.action === "sell") continue;
+            console.log(transfer);
 
             // First, check if our price information is in the cache, if not load it
             let liquidityInfo: BalanceReport;
@@ -146,10 +148,13 @@ export class FilterSubcommand implements DiscordSubcommand{
 
             // Now determine the WETH value of the token transfer
             const wethValue = liquidityInfo.wethPerToken.multiply(new bigDecimal(transfer.tokenAmount));
+            console.log("weth value", wethValue.getPrettyValue(3, ","));
 
             // Use bigDecimal to compare the values
             const comparedLowerBound = wethValue.compareTo(new bigDecimal(minimumEth));
+            console.log(comparedLowerBound, "lower bound");
             const comparedUpperBound = wethValue.compareTo(new bigDecimal(maximumEth));
+            console.log(comparedUpperBound, "upper bound");
 
             // Verify the values are within the bounds set by the user
             if(comparedLowerBound >= 0 /*equal to or greater than*/){
@@ -163,6 +168,13 @@ export class FilterSubcommand implements DiscordSubcommand{
         // First, make sure we actually found some addresses to add
         if(addresses.length === 0){
             // Let em know the filter too strict
+            await interaction.editReply({
+                embeds: [
+                    EmbedUtils.buildErrorEmbed()
+                        .setTitle("No Addresses Found")
+                        .setDescription("No addresses were found to match the provided filter, so the operation has been aborted.")
+                ]
+            })
             return;
         }
 
@@ -200,7 +212,7 @@ export class FilterSubcommand implements DiscordSubcommand{
         await StorageModel.upsertGroup(group);
 
         // Let the user know we popped off
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 EmbedUtils.buildSuccessEmbed()
                     .setTitle("Filtered Group Addresses Successfully")

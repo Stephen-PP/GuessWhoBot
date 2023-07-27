@@ -28,9 +28,6 @@ export class DiscordBot{
         // Login
         await this.client.login(process.env.DISCORD_TOKEN);
         console.log("Logged in as " + this.client.user?.tag);
-
-        // Test shit
-        console.log(await BlockService.getFirstLiquidityBlock("0xfb66321D7C674995dFcC2cb67A30bC978dc862AD"));
     }
 
    

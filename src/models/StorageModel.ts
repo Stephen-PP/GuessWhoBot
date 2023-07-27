@@ -6,7 +6,7 @@ export class StorageModel {
 
     constructor(){
         StorageModel.client = createClient({
-            url: "redis://192.168.1.251:6379"
+            url: process.env.REDIS_URL ?? ""
         });
     }
 

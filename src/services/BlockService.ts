@@ -14,6 +14,8 @@ export class BlockService {
         // First, we'll get the pair address
         const pair: string = await UniswapV2Factory.getPair(token, /* WETH */ "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
 
+        console.log(pair);
+
         // For now, only accept WETH pairs
         if(pair === "0x0000000000000000000000000000000000000000"){
             return false;
@@ -24,6 +26,8 @@ export class BlockService {
             method: "GET"
         });
 
+        console.log(pairResponse, "pair");
+
         const pairCreationBlock: number | undefined = pairResponse.data?.data[0]?.blockNumber;
 
         // Make sure response from Trueblocks is not malformed
@@ -31,26 +35,24 @@ export class BlockService {
             return false;
         }
 
-        // Now we need to find out when the pair received tokens
-        const blockArray = [];
-
         // Get the current block number so that we make sure we don't surpass it in our check
         const currentBlock = await ProviderUtils.getProvider().getBlockNumber();
 
-        // Now add blocks one by one to the array
-        for(let i = 0; i < 10000; i++){
-            if(i + pairCreationBlock > currentBlock){
-                break;
-            }
+        // Determine the upper limit block (make sure we don't get any closer than 5 to head)
+        const upperLimit = (pairCreationBlock + 10000) > (currentBlock-5) ? currentBlock - 5 : pairCreationBlock + 10000;
 
-            blockArray.push(pairCreationBlock + i);
+        // Just making sure we don't run into the upper bound greater than lower bound issue
+        if(upperLimit <= pairCreationBlock){
+            return false;
         }
 
         // Send request to get the data
         const liquidityResponse = await axios({
-            url: `${process.env.TRUEBLOCKS_PROVIDER}/tokens?addrs=${token} ${pair}&blocks=${blockArray.join(" ")}&noZero=true`,
+            url: `${process.env.TRUEBLOCKS_PROVIDER}/tokens?addrs=${token} ${pair}&blocks=${pairCreationBlock}-${upperLimit}&noZero=true`,
             method: "GET"
         })
+
+        console.log(liquidityResponse, "liq");
 
         // Return the earliest block number (first in array)
         const liquidityBlock: number | undefined = liquidityResponse.data?.data[0]?.blockNumber;

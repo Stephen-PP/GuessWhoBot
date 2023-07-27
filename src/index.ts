@@ -4,11 +4,7 @@ dotenv.config({
 });
 
 import { DiscordBot } from "./bin/DiscordBot";
-import { ethers } from "ethers";
-import { ERC20Contract } from "./abis/ERC20";
 import { ProviderUtils } from "./utils/ProviderUtils";
-import { AppearanceService } from "./services/AppearanceService";
-import { LiquidityService } from "./services/LiquidityService";
 
 /*const contract = ERC20Contract.from("0x076a3e1500f3110d8f4445d396a3d7ca6d0ca269");
 
