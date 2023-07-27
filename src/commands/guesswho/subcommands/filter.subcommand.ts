@@ -115,7 +115,6 @@ export class FilterSubcommand implements DiscordSubcommand{
 
         // Now, we need to get all sales in the period
         const transfers = await AppearanceService.getAllTransfers(startingBlock.pair, token, startingBlock.block, startingBlock.block + blocksToSearch);
-        console.log("transfered hanled");
 
         // Let the user know we are finding transfers
         await interaction.editReply({
@@ -135,7 +134,6 @@ export class FilterSubcommand implements DiscordSubcommand{
         for(let transfer of transfers) {
             // Skip sales (for now)
             if(transfer.action === "sell") continue;
-            console.log(transfer);
 
             // First, check if our price information is in the cache, if not load it
             let liquidityInfo: BalanceReport;
@@ -148,18 +146,16 @@ export class FilterSubcommand implements DiscordSubcommand{
 
             // Now determine the WETH value of the token transfer
             const wethValue = liquidityInfo.wethPerToken.multiply(transfer.tokenAmount);
-            console.log("weth value", wethValue.getPrettyValue(3, ","));
 
             // Use bigDecimal to compare the values
             const comparedLowerBound = wethValue.compareTo(new bigDecimal(minimumEth));
-            console.log(comparedLowerBound, "lower bound");
             const comparedUpperBound = wethValue.compareTo(new bigDecimal(maximumEth));
-            console.log(comparedUpperBound, "upper bound");
 
             // Verify the values are within the bounds set by the user
             if(comparedLowerBound >= 0 /*equal to or greater than*/){
                 if(comparedUpperBound <= 0 /*equal to or less than*/){
-                    // Add the address to the array of addresses to meet the criteria
+                    // Add the address to the array of addresses to meet the criteria (and skip duplicates)
+                    if(addresses.includes(transfer.address)) continue;
                     addresses.push(transfer.address);
                 }
             }

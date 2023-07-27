@@ -14,8 +14,6 @@ export class BlockService {
         // First, we'll get the pair address
         const pair: string = await UniswapV2Factory.getPair(token, /* WETH */ "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
 
-        console.log(pair);
-
         // For now, only accept WETH pairs
         if(pair === "0x0000000000000000000000000000000000000000"){
             return false;
@@ -25,8 +23,6 @@ export class BlockService {
             url: `${process.env.TRUEBLOCKS_PROVIDER}/list?addrs=${pair}`,
             method: "GET"
         });
-
-        console.log(pairResponse, "pair");
 
         const pairCreationBlock: number | undefined = pairResponse.data?.data[0]?.blockNumber;
 
@@ -51,8 +47,6 @@ export class BlockService {
             url: `${process.env.TRUEBLOCKS_PROVIDER}/tokens?addrs=${token} ${pair}&blocks=${pairCreationBlock}-${upperLimit}&noZero=true`,
             method: "GET"
         })
-
-        console.log(liquidityResponse, "liq");
 
         // Return the earliest block number (first in array)
         const liquidityBlock: number | undefined = liquidityResponse.data?.data[0]?.blockNumber;
