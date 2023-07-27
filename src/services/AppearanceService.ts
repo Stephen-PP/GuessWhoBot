@@ -8,7 +8,8 @@ interface CompiledTransfer {
     action: "sell" | "buy",
     tokenAmount: bigint,
     address: string,
-    hash: string
+    hash: string,
+    blockNumber: number
 }
 
 interface UnknownTransaction {
@@ -80,7 +81,8 @@ export class AppearanceService {
                         action: "buy",
                         tokenAmount: amount,
                         address: txn.to,
-                        hash: txn.hash
+                        hash: txn.hash,
+                        blockNumber: txn.blockNumber
                     })
                 }
                 // Sell transactions (to the LP from the buyer [and eth from LP to buyer])
@@ -90,7 +92,8 @@ export class AppearanceService {
                         action: "sell",
                         tokenAmount: amount,
                         address: txn.to,
-                        hash: txn.hash
+                        hash: txn.hash,
+                        blockNumber: txn.blockNumber
                     })
                 }
             }

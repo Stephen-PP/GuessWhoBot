@@ -13,6 +13,9 @@ dependencies:
   ethers:
     specifier: ^6.6.4
     version: 6.6.4
+  js-big-decimal:
+    specifier: ^1.4.1
+    version: 1.4.1
   redis:
     specifier: ^4.6.7
     version: 4.6.7
@@ -321,6 +324,10 @@ packages:
 
   /inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+    dev: false
+
+  /js-big-decimal@1.4.1:
+    resolution: {integrity: sha512-lEE6kXojqv1/ky/H0nTTg5gi+1g+V6O94T2GPpZTGayXGeYIC6f6PszckNsEa7S2+qgas9ZOEkONMryxXVKWwQ==}
     dev: false
 
   /lodash.snakecase@4.1.1:

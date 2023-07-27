@@ -1,11 +1,11 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { DiscordCommand, DiscordSubcommand, SubcommandMapping } from "../../definitions/DiscordCommand";
 import { CreateSubcommand } from "./subcommands/create.subcommand";
-import { AddSubcommand } from "./subcommands/add.subcommand";
 import { DeleteSubcommand } from "./subcommands/delete.subcommand";
 import { InfoSubcommand } from "./subcommands/info.subcommand";
 import { ListSubcommand } from "./subcommands/list.subcommand";
 import { RevertSubcommand } from "./subcommands/revert.subcommand";
+import { FilterSubcommand } from "./subcommands/filter.subcommand";
 
 export class GuessWho implements DiscordCommand {
     private commandInfo: SlashCommandBuilder;
@@ -18,7 +18,7 @@ export class GuessWho implements DiscordCommand {
         this.subcommands = {};
 
         this.registerSubcommands(
-            new CreateSubcommand(), new AddSubcommand(), new DeleteSubcommand(), new InfoSubcommand(), new ListSubcommand(), new RevertSubcommand()
+            new CreateSubcommand(), new FilterSubcommand(), new DeleteSubcommand(), new InfoSubcommand(), new ListSubcommand(), new RevertSubcommand()
         );
     }
 
