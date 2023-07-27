@@ -147,7 +147,7 @@ export class FilterSubcommand implements DiscordSubcommand{
             }
 
             // Now determine the WETH value of the token transfer
-            const wethValue = liquidityInfo.wethPerToken.multiply(new bigDecimal(transfer.tokenAmount));
+            const wethValue = liquidityInfo.wethPerToken.multiply(transfer.tokenAmount);
             console.log("weth value", wethValue.getPrettyValue(3, ","));
 
             // Use bigDecimal to compare the values
