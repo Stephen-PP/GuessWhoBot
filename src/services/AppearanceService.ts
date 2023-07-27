@@ -3,10 +3,11 @@ import UniswapV2Factory from "../abis/UniswapV2Factory";
 import axios from "axios";
 import { ProviderUtils } from "../utils/ProviderUtils";
 import { ERC20Contract } from "../abis/ERC20";
+import bigDecimal from "js-big-decimal";
 
 interface CompiledTransfer {
     action: "sell" | "buy",
-    tokenAmount: bigint,
+    tokenAmount: bigDecimal,
     address: string,
     hash: string,
     blockNumber: number
@@ -31,6 +32,8 @@ export class AppearanceService {
     static async getAllTransfers(pairAddress: string, tokenAddress: string, startingBlock: number, endingBlock: number): Promise<CompiledTransfer[]>{
         // Create an instance of our contract
         const contract = ERC20Contract.from(tokenAddress);
+
+        const decimalScientific: bigDecimal = new bigDecimal(10n ** await contract.decimals());
 
         // First, prepare to get all transactions in the time period
         const transferTransactions = await axios({
@@ -72,7 +75,7 @@ export class AppearanceService {
 
                 const from: string = log.processed.args[0];
                 const to: string = log.processed.args[1];
-                const amount: bigint = log.processed.args[2];
+                const amount: bigDecimal = new bigDecimal(log.processed.args[2]).divide(decimalScientific, 18);
 
                 // Buy transactions (token transfer from LP to buyer [and eth from buyer to LP])
                 if(from.toLowerCase() === pairAddress.toLowerCase() && to.toLowerCase() === txn.to.toLowerCase()){
