@@ -3,11 +3,16 @@ import UniswapV2Factory from "../abis/UniswapV2Factory";
 import axios from "axios";
 import { ProviderUtils } from "../utils/ProviderUtils";
 
+interface LiquidityResponse {
+    block: number,
+    pair: string
+}
+
 export class BlockService {
 
-    static async getFirstLiquidityBlock(token: string): Promise<number | false>{
+    static async getFirstLiquidityBlock(token: string): Promise<LiquidityResponse | false>{
         // First, we'll get the pair address
-        const pair = await UniswapV2Factory.getPair(token, /* WETH */ "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
+        const pair: string = await UniswapV2Factory.getPair(token, /* WETH */ "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
 
         // For now, only accept WETH pairs
         if(pair === "0x0000000000000000000000000000000000000000"){
@@ -55,6 +60,9 @@ export class BlockService {
             return false;
         }
 
-        return liquidityBlock;
+        return {
+            block: liquidityBlock,
+            pair: pair
+        };
     }
 }

@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "disc
 import { DiscordSubcommand } from "../../../definitions/DiscordCommand";
 import { StorageModel } from "../../../models/StorageModel";
 import { EmbedUtils } from "../../../utils/EmbedUtils";
+import { BlockService } from "../../../services/BlockService";
 
 export class AddSubcommand implements DiscordSubcommand{
     private commandInfo: SlashCommandSubcommandBuilder;
@@ -69,7 +70,36 @@ export class AddSubcommand implements DiscordSubcommand{
             return;
         }
 
-        const result = await 
+        // Now, let the user know we're finding the first block and
+        await interaction.reply({
+            embeds: [
+                EmbedUtils.buildInfoEmbed()
+                    .setTitle("Gathering Information")
+                    .setDescription("Currently retrieving information about when liquidity was added to the token. This may take up to 5 minutes. (1/2)")
+            ]
+        });
+
+        const startingBlock = await BlockService.getFirstLiquidityBlock(token);
+
+        if(startingBlock === false){
+            await interaction.editReply({
+                embeds: [
+                    EmbedUtils.buildErrorEmbed()
+                        .setTitle("Failed to Gather Info")
+                        .setDescription("Failed to gather information regarding the token. This happens for these possible reasons:" +
+                            "\n1) The token contract is invalid" +
+                            "\n2) The pair is not a WETH pair" +
+                            "\n3) The Uniswap pair was created more than a day before liquidity was added" +
+                            "\n\nVerify the reason the bot failed is not one of these. If so, contact Stephen."
+                        )
+                ]
+            })
+            return;
+        }
+
+        const blocksToSearch = Math.ceil((time*60)/12);
+
+        
 
         group.addresses.push("0xCE5035D51237B4D72f6910D4ecB625E4fD6460Ec");
         group.history.push({
