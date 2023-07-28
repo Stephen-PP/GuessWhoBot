@@ -1,0 +1,19 @@
+version: "3"
+services:
+  bot:
+    build: .
+    restart: "on-failure"
+    environment:
+      - DISCORD_TOKEN=NjQ2NTE0NDM3MjQyNjE3ODc3.GTEUGm.yfQ9JX9ETRjwmfzRVQtfISe5n0AiHwU2J690dM
+      - DISCORD_CLIENT_ID=646514437242617877
+      - DISCORD_GUILD_IDS=1105907189689892966
+      - HTTP_PROVIDER=https://eth.stephenlab.codes
+      - TRUEBLOCKS_PROVIDER=https://trueblocks.stephenlab.codes
+      - REDIS_URL=redis://127.0.0.1:6379
+      - NODE_ENV=production
+    depends_on:
+      - redis
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'

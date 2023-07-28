@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-dotenv.config({
-    debug: true
-});
+if(process.env?.NODE_ENV !== "production"){
+    dotenv.config();
+}
 
 import { DiscordBot } from "./bin/DiscordBot";
 import { ProviderUtils } from "./utils/ProviderUtils";
