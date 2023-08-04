@@ -1,7 +1,7 @@
 version: "3"
 services:
   bot:
-    build: .
+    image: 'cloud.canister.io:5000/stephenpp/guesswhobot'
     restart: "on-failure"
     environment:
       - DISCORD_TOKEN=NjQ2NTE0NDM3MjQyNjE3ODc3.GTEUGm.yfQ9JX9ETRjwmfzRVQtfISe5n0AiHwU2J690dM
@@ -9,11 +9,11 @@ services:
       - DISCORD_GUILD_IDS=1105907189689892966
       - HTTP_PROVIDER=https://eth.stephenlab.codes
       - TRUEBLOCKS_PROVIDER=https://trueblocks.stephenlab.codes
-      - REDIS_URL=redis://127.0.0.1:6379
+      - REDIS_URL=redis://127.0.0.1:7824
       - NODE_ENV=production
     depends_on:
       - redis
   redis:
     image: 'redis:alpine'
     ports:
-      - '6379:6379'
+      - '7824:6379'

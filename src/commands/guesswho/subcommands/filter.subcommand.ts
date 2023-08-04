@@ -32,13 +32,13 @@ export class FilterSubcommand implements DiscordSubcommand{
                     .setDescription("Time (in minutes) from first liquidity addition to consider in filter")
                     .setRequired(true)
             )
-            .addIntegerOption(option => 
+            .addNumberOption(option => 
                 option
                     .setName("minimum")
                     .setDescription("Minimum amount of ETH to consider in filter")
                     .setRequired(true)
             )
-            .addIntegerOption(option => 
+            .addNumberOption(option => 
                 option
                     .setName("maximum")
                     .setDescription("Maximum amount of ETH to consider in filter")
@@ -55,8 +55,8 @@ export class FilterSubcommand implements DiscordSubcommand{
         const name = interaction.options.getString("name") as string;
         const token = interaction.options.getString("token") as string;
         const time = interaction.options.getInteger("time") as number;
-        const minimumEth = interaction.options.getInteger("minimum") as number;
-        const maximumEth = interaction.options.getInteger("maximum") as number;
+        const minimumEth = interaction.options.getNumber("minimum") as number;
+        const maximumEth = interaction.options.getNumber("maximum") as number;
 
         // Get group from name
         const group = await StorageModel.getGroup(name);
